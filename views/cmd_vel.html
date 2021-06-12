@@ -1,0 +1,74 @@
+<html>
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+    <h3>cmd_vel topic</h3>
+  </div>
+  <div class="card">
+    <div class="card-header">Linear</div>
+    <div class="card-body">
+      <div class="mb-12 row">
+        <label for="linear_x" class="col-sm-1 col-form-label">X</label>
+        <div class="col-sm-2">
+          <input type="text" class="form-control" id="linear_x" placeholder="0.0" value="0">
+        </div>
+        <label for="linear_y" class="col-sm-1 col-form-label">Y</label>
+        <div class="col-sm-2">
+          <input type="text" class="form-control" id="linear_y" placeholder="0.0" value="0">
+        </div>
+        <label for="linear_z" class="col-sm-1 col-form-label">Z</label>
+        <div class="col-sm-2">
+          <input type="text" class="form-control" id="linear_z" placeholder="0.0" value="0">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">Angular</div>
+    <div class="card-body">
+      <div class="mb-12 row">
+        <label for="angular_x" class="col-sm-1 col-form-label">X</label>
+        <div class="col-sm-2">
+          <input type="text" class="form-control" id="angular_x" placeholder="0.0" value="0">
+        </div>
+        <label for="angular_y" class="col-sm-1 col-form-label">Y</label>
+        <div class="col-sm-2">
+          <input type="text" class="form-control" id="angular_y" placeholder="0.0" value="0">
+        </div>
+        <label for="angular_z" class="col-sm-1 col-form-label">Z</label>
+        <div class="col-sm-2">
+          <input type="text" class="form-control" id="angular_z" placeholder="0.0" value="0">
+        </div>
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <button type="button" onclick="onclick_publish()" class="btn btn-primary btn-lg">Publish</button>
+      
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+  function onclick_publish(){
+    var linear_x = parseFloat(document.getElementById('linear_x').value);
+    var linear_y = parseFloat(document.getElementById('linear_y').value);
+    var linear_z = parseFloat(document.getElementById('linear_z').value);
+    var angular_x = parseFloat(document.getElementById('angular_x').value);
+    var angular_y = parseFloat(document.getElementById('angular_y').value);
+    var angular_z = parseFloat(document.getElementById('angular_z').value);
+
+    var topic_object = {linear: {x: linear_x, y:linear_y, z:linear_z}, angular:{x:angular_x, y:angular_y, z:angular_z}};
+    console.log(topic_object);
+    console.log(JSON.stringify(topic_object));
+    axios.post('/cmd_vel', topic_object).
+    then(function(response){
+      console.log(response);
+    }).catch(function(error){
+      console.log(error);
+    });
+  }
+  </script>
+</body>
+</html>
+
