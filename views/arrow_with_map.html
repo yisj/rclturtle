@@ -1,0 +1,106 @@
+<html>
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+    <h3>Arrow with map</h3>
+  </div>
+  <div class="row">
+    <div class="col-5">
+      <div class="card">
+        <div class="card-header">Arrow</div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+            </div>
+            <div class="col">
+                <button type="button" onclick="arrow('up')" class="btn btn-success btn-lg">Up</button>
+            </div>
+            <div class="col">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <button type="button" onclick="arrow('left')" class="btn btn-success btn-lg">Left</button>
+            </div>
+            <div class="col">
+            </div>
+            <div class="col">
+              <button type="button" onclick="arrow('right')" class="btn btn-success btn-lg">Right</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+            </div>
+            <div class="col">
+              <button type="button" onclick="arrow('down')" class="btn btn-success btn-lg">Down</button>
+            </div>
+            <div class="col">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-7">
+      <div class="card">
+        <div class="card-header">Map</div>
+        <div class="card-body">
+          <svg width="300" height="300"></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+
+
+  function arrow(dir){
+    var js_ob = {arrow: dir};
+    axios.post('/arrow', js_ob)
+    .then(function(response){
+      console.log(response);
+    })
+    .catch(function(error){
+      console.log(error);
+    });
+  }
+
+  var svg = d3.select("svg")
+    .style("background-color", "AliceBlue"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height");
+
+  var circle_data = [
+    {x: 5, y: 5},
+  ];
+
+  var X = d3.scaleLinear().domain([0, 10]).range([0, width]);
+  var Y = d3.scaleLinear().domain([0, 10]).range([height, 0]);
+
+  var dot = svg.append('g')
+    .selectAll("dot")
+    .data(circle_data)
+    .enter()
+    .append("circle")
+    .attr("cx", function(d) {return X(d.x);})
+    .attr("cy", function(d) {return Y(d.y);})
+    .attr("r", 5.5)
+    .style("fill", "#69b3a2");
+
+  var socket = io();
+
+  socket.on("pose", data => {
+    circle_data.x = data.x;
+    circle_data.y = data.y;
+      dot
+      .attr("cx", X(data.x))
+      .attr("cy", Y(data.y));
+  });
+
+  </script>
+</body>
+</html>
+

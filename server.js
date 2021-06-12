@@ -20,8 +20,9 @@ rclnodejs.init().then(()=>{
   publisher = node.createPublisher('geometry_msgs/msg/Twist', 'turtle1/cmd_vel');
   subscription = node.createSubscription('turtlesim/msg/Pose', 'turtle1/pose', (msg) => {
     //console.log('Received message:', msg);
+    io.sockets.emit("pose",  msg);
   });
-  //rclnodejs.spin(node);
+  rclnodejs.spin(node);
   console.log('publisher created');
 }).catch((err)=>{
   console.log(err);
@@ -71,8 +72,15 @@ app.post('/arrow', (req, res) => {
   }
 });
 
+app.get('/arrow-with-map', (req, res) => {
+  res.sendFile(__dirname+'/views/arrow_with_map.html');
+});
+
 io.on('connection', (socket) => {
   console.log('a user connected');
+  socket.on('disconnect', ()=> {
+    console.log('  user disconnected');
+  });
 });
 
 server.listen(3333, ()=>{
