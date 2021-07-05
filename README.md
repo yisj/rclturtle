@@ -7,3 +7,4 @@ Using rclnodejs & express to control turtlebot remotely
 ## routes
 * /cmd_vel
 * /arrow
+* /arrow-with-map
